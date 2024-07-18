@@ -25,7 +25,7 @@ def send_email(subject, body, to):
 
 def check_calendar_and_notify():
     SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
-    creds = Credentials.from_service_account_file('path_to_your_service_account.json', scopes=SCOPES)
+    creds = Credentials.from_service_account_file('details.json', scopes=SCOPES)
     service = build('calendar', 'v3', credentials=creds)
 
     now = datetime.datetime.utcnow().isoformat() + 'Z'
