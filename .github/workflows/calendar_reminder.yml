@@ -21,7 +21,12 @@ jobs:
         run: pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
 
       - name: Set up Google Cloud credentials
-        run: echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > $HOME/details.json
+        run: |
+          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > $HOME/details.json
+          cat $HOME/details.json  # Debugging step to ensure the file is correctly written
+
+      - name: List directory contents
+        run: ls -la $HOME  # Debugging step to ensure the file is in the correct directory
 
       - name: Run script
         run: python your_script.py
