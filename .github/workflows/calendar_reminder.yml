@@ -2,33 +2,28 @@ name: Calendar Reminder
 
 on:
   schedule:
-    - cron: '*/10 * * * *'
+    - cron: '*/10 * * * *'  # Runs every 10 minutes
   workflow_dispatch:
 
 jobs:
   reminder:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v3
         with:
           python-version: 3.x
 
       - name: Install dependencies
-        run: pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
+        run: pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib
 
       - name: Set up Google Cloud credentials
         run: |
-          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > $HOME/details.json
-          cat $HOME/details.json  # Debugging step to ensure the file is correctly written
-
-      - name: List directory contents
-        run: ls -la $HOME  # Debugging step to ensure the file is in the correct directory
+          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > $HOME/credentials.json
 
       - name: Run script
         run: python your_script.py
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: $HOME/details.json
+          GOOGLE_APPLICATION_CREDENTIALS: $HOME/credentials.json
