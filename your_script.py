@@ -52,7 +52,7 @@ from datetime import timezone
 
 def check_calendar_and_notify():
     SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
-    credentials_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+    credentials_path = os.path.expanduser(os.getenv('GOOGLE_APPLICATION_CREDENTIALS'))
 
     creds = service_account.Credentials.from_service_account_file(credentials_path, scopes=SCOPES)
     service = build('calendar', 'v3', credentials=creds)
