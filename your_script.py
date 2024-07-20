@@ -6,7 +6,7 @@ from datetime import timezone
 
 def check_calendar_and_notify():
     SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
-    credentials_path = os.path.expanduser('details.json')  # Ensure the path is correct
+    credentials_path = os.path.expanduser('detail.json')  # Ensure the path is correct
 
     try:
         creds = service_account.Credentials.from_service_account_file(credentials_path, scopes=SCOPES)
