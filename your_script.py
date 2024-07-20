@@ -1,4 +1,4 @@
-import os
+import json
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 import datetime
@@ -6,26 +6,25 @@ from datetime import timezone
 
 def check_calendar_and_notify():
     SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
-    credentials_path = os.path.expanduser('detail.json')  # Ensure the path is correct
+    with open('/tmp/service_account.json') as f:
+        service_account_info = json.load(f)
 
-    try:
-        creds = service_account.Credentials.from_service_account_file(credentials_path, scopes=SCOPES)
-        service = build('calendar', 'v3', credentials=creds)
+    credentials = service_account.Credentials.from_service_account_info(
+        service_account_info, scopes=SCOPES)
+    service = build('calendar', 'v3', credentials=credentials)
 
-        now = datetime.datetime.now(timezone.utc).isoformat()
+    # Call the Calendar API
+    now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
+    events_result = service.events().list(calendarId='primary', timeMin=now,
+                                          maxResults=10, singleEvents=True,
+                                          orderBy='startTime').execute()
+    events = events_result.get('items', [])
 
-        events_result = service.events().list(calendarId='primary', timeMin=now,
-                                              maxResults=10, singleEvents=True,
-                                              orderBy='startTime').execute()
-        events = events_result.get('items', [])
-
-        if not events:
-            print('No upcoming events found.')
-        for event in events:
-            start = event['start'].get('dateTime', event['start'].get('date'))
-            print(start, event['summary'])
-    except Exception as e:
-        print(f"An error occurred: {e}")
+    if not events:
+        print('No upcoming events found.')
+    for event in events:
+        start = event['start'].get('dateTime', event['start'].get('date'))
+        print(start, event['summary'])
 
 if __name__ == '__main__':
     check_calendar_and_notify()
