@@ -21,7 +21,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client
 
-    - name: Run script
+    - name: Write service account JSON to file
       env:
         SERVICE_ACCOUNT_JSON: '{
           "type": "service_account",
@@ -36,6 +36,10 @@ jobs:
           "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/notifier%40inte-428705.iam.gserviceaccount.com",
           "universe_domain": "googleapis.com"
         }'
-      run: |
-        echo "$SERVICE_ACCOUNT_JSON" > /tmp/service_account.json
-        python your_script.py
+      run: echo "$SERVICE_ACCOUNT_JSON" > /tmp/service_account.json
+
+    - name: Debug service account JSON
+      run: cat /tmp/service_account.json
+
+    - name: Run script
+      run: python your_script.py
