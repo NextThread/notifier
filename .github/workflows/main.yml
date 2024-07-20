@@ -3,6 +3,7 @@ name: Calendar Notifier
 on:
   schedule:
     - cron: '0 * * * *'
+  workflow_dispatch:
 
 jobs:
   run_script:
